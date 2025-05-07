@@ -1,7 +1,7 @@
 "use strict";
 // The Idle Class Autocrat
 // made with luv by argembarger
-// v3.2.1, last tested with The Idle Class v0.8.2
+// v3.2.2, last tested with The Idle Class v0.8.2
 // USE AT OWN RISK -- feel free to steal
 // not responsible if your game gets hurt >_>
 // Export Early / Export Often
@@ -105,9 +105,12 @@ class IdleClassAutocrat {
 			}
 		};
 		this.autoHR = function() {
-			// Based on current share of total income
-			for(let i = 0; i <= 11; i++) {
-				this.currEmployee = game.units.peek(0)[i];
+			// reverse the loop | in favour of more "productive" units
+			for(let i = 11; i >= 0; i--) {
+				this.currEmployee = game.units.peek()[i];
+				// No cheating, Sir (:
+				if(!this.currEmployee.available()) continue;
+				// Based on current share of total income
 				let fairShare = parseFloat(this.currEmployee.shareOfTotal()) / 100;
 				// ( if possible ) always buy til first 5 | to activate next higher unit
 				if(this.currEmployee.num.val() <= 4 && (this.currEmployee.price.val() <= game.currentCash.val())) {
