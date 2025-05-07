@@ -1,7 +1,7 @@
 "use strict";
 // The Idle Class Autocrat
 // made with luv by argembarger
-// v3.2.0, last tested with The Idle Class v0.6.0
+// v3.2.1, last tested with The Idle Class v0.8.2
 // USE AT OWN RISK -- feel free to steal
 // not responsible if your game gets hurt >_>
 // Export Early / Export Often
@@ -30,7 +30,6 @@ class IdleClassAutocrat {
 		this.autocratManageLoopMillis = 2500; // Default 2500, runs an Autocrat update every 2.5 seconds
 		this.autocratInnerLoopMillis = 100; // Default 100, does individual Autocrat actions every 0.1 seconds
 		this.upgradeSpendFraction = 1.0; // Default 1.0, willing to spend 100% on upgrades, RATIO VALUE, 0.67 = 67%
-		this.employeeSpendFraction = 0.999; // Default 0.999, willing to spend 99.9% on employees, RATIO VALUE, 0.67 = 67%
 		this.maxAllowableRisk = 0.0; // Default 0.0%, stops R&D hiring above this risk value, PERCENTAGE VALUE, 67.0 = 67%
 		this.acquisitionStopHiringFraction = 0.666; // Default 0.666, stops hiring acq employees at less than 66.6% workers remaining, RATIO VALUE, 0.67 = 67%
 		this.bankruptcyResetFraction = 0.1; // Default 0.1, makes every bankruptcy 110%, RATIO VALUE, 0.67 = 67%
@@ -106,13 +105,14 @@ class IdleClassAutocrat {
 			}
 		};
 		this.autoHR = function() {
-			// Based on currently-selected Purchase Rate.
-			// Try to buy first employee of each type right away, though.
+			// Based on current share of total income
 			for(let i = 0; i <= 11; i++) {
 				this.currEmployee = game.units.peek(0)[i];
+				let fairShare = parseFloat(this.currEmployee.shareOfTotal()) / 100;
+				// ( if possible ) always buy til first 5 | to activate next higher unit
 				if(this.currEmployee.num.val() <= 4 && (this.currEmployee.price.val() <= game.currentCash.val())) {
 					this.currEmployee.buy();
-				} else if(this.currEmployee.price.val() < (game.currentCash.val() * this.employeeSpendFraction)) {
+				} else if(this.currEmployee.price.val() < (game.currentCash.val() * fairShare)) {
 					this.currEmployee.buy();
 				}
 			}
