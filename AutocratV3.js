@@ -1,7 +1,7 @@
 "use strict";
 // The Idle Class Autocrat
 // made with luv by argembarger
-// v3.2.0, last tested with The Idle Class v0.6.0
+// v3.3.0, last tested with The Idle Class v0.8.2
 // USE AT OWN RISK -- feel free to steal
 // not responsible if your game gets hurt >_>
 // Export Early / Export Often
@@ -331,36 +331,38 @@ class IdleClassAutocrat {
 			this.autoUpgrade();
 			this.autoHR();
 		};
-		this.autoUntilResearchAndDevelopment = function() {
-			this.autoEarnDollars();
-			this.autoUpgrade();
-			this.autoHR();
-			this.autoMail();
-		};
 		this.autoUntilInvestments = function() {
 			this.autoEarnDollars();
 			this.autoUpgrade();
 			this.autoHR();
 			this.autoMail();
-			this.autoScience();
+		};
+		this.autoUntilResearchAndDevelopment = function() {
+			this.autoEarnDollars();
+			this.autoUpgrade();
+			this.autoHR();
+			this.autoMail();
+			this.autoInvest();
+			this.autoDivest();
+			
 		};
 		this.autoUntilAcquisitions = function() {
 			this.autoEarnDollars();
 			this.autoUpgrade();
 			this.autoHR();
 			this.autoMail();
-			this.autoScience();
 			this.autoInvest();
 			this.autoDivest();
+			this.autoScience();
 		};
 		this.autoUntilBankruptcy = function() {
 			this.autoEarnDollars();
 			this.autoUpgrade();
 			this.autoHR();
 			this.autoMail();
-			this.autoScience();
 			this.autoInvest();
 			this.autoDivest();
+			this.autoScience();
 			this.autoMicromanage();
 		};
 		// Function to manage state of autocratInnerLoopMillis inner loop
@@ -372,20 +374,20 @@ class IdleClassAutocrat {
 					if(this.currProcessHandle !== 0) { clearInterval(this.currProcessHandle); }
 					this.currProcessHandle = setInterval(this.autoUntilEmails.bind(this), this.autocratInnerLoopMillis);
 					break;
-				case 1: // Wait for emails before changing loop to pre-R&D loop.
+				case 1: // Wait for emails before changing loop to pre-Investments loop.
 					if(game.locked().mail === true) { break; }
 					this.currProcess = 2;
 					clearInterval(this.currProcessHandle);
-					this.currProcessHandle = setInterval(this.autoUntilResearchAndDevelopment.bind(this), this.autocratInnerLoopMillis);
-					break;
-				case 2: // Wait for R&D before changing loop to pre-Investments loop.
-					if(game.locked().research === true) { break; }
-					this.currProcess = 3;
-					clearInterval(this.currProcessHandle);
 					this.currProcessHandle = setInterval(this.autoUntilInvestments.bind(this), this.autocratInnerLoopMillis);
 					break;
-				case 3: // Wait for Investments before changing loop to pre-Acquisitions loop.
+				case 2: // Wait for Investments before changing loop to pre-R&D loop.
 					if(game.locked().investments === true) { break; }
+					this.currProcess = 3;
+					clearInterval(this.currProcessHandle);
+					this.currProcessHandle = setInterval(this.autoUntilResearchAndDevelopment.bind(this), this.autocratInnerLoopMillis);
+					break;
+				case 3: // Wait for R&D before changing loop to pre-Acquisitions loop.
+					if(game.locked().research === true) { break; }
 					this.currProcess = 4;
 					clearInterval(this.currProcessHandle);
 					this.currProcessHandle = setInterval(this.autoUntilAcquisitions.bind(this), this.autocratInnerLoopMillis);
