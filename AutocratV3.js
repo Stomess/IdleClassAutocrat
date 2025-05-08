@@ -92,6 +92,7 @@ class IdleClassAutocrat {
 		
 		this.autoEarnDollars = function() {
 			game.addManualClicks();
+			$(".top-click-value-display").fadeToggle()
 		};
 		this.autoUpgrade = function() {
 			if(this.upgradeSpendFraction >= 1.0) {
