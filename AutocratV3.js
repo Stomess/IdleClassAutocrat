@@ -366,7 +366,6 @@ class IdleClassAutocrat {
 		};
 		// Function to manage state of autocratInnerLoopMillis inner loop
 		this.autoAutocrat = function() { // fractionOfCurrentBankruptcyBonus
-			this.autocratSelfNaming();
 			switch(this.currProcess) {
 				case 0: // Not running; new Autocrat state. Clear any existing loop and start pre-email loop.
 					this.currProcess = 1;
@@ -413,6 +412,7 @@ class IdleClassAutocrat {
 		// Function to lazily kick off autocratManageLoopMillis outer loop
 		this.autoAutoAutocrat = function() {
 			if(this.currOuterProcessHandle !== 0) { clearInterval(this.currOuterProcessHandle); }
+			this.autocratSelfNaming();
 			this.currOuterProcessHandle = setInterval(this.autoAutocrat.bind(this), this.autocratManageLoopMillis);
 		};
 	}
