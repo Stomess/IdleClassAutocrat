@@ -1,7 +1,7 @@
 "use strict";
 // The Idle Class Autocrat
 // made with luv by argembarger
-// v3.2.0, last tested with The Idle Class v0.6.0
+// v3.2.4, last tested with The Idle Class v0.8.2
 // USE AT OWN RISK -- feel free to steal
 // not responsible if your game gets hurt >_>
 // Export Early / Export Often
