@@ -1,7 +1,7 @@
 "use strict";
 // The Idle Class Autocrat
 // made with luv by argembarger
-// v3.2.0, last tested with The Idle Class v0.6.0
+// v3.2.1, last tested with The Idle Class v0.8.2
 // USE AT OWN RISK -- feel free to steal
 // not responsible if your game gets hurt >_>
 // Export Early / Export Often
@@ -78,7 +78,11 @@ class IdleClassAutocrat {
 			}
 			game.businessName().newName("AutoBiz#" + (maxKnownBusiness + 1));
 			game.businessName().save();
-		}
+		};
+		this.unlockCartel = function() {
+			if( 1 === game.communityLocked.val() ) return;
+			game.cartel.unlock()
+		};
 		this.randomBizWord = function() {
 			return this.autoBusinessWords[Math.floor(Math.random()*this.autoBusinessWords.length)];
 		};
@@ -366,6 +370,7 @@ class IdleClassAutocrat {
 		// Function to manage state of autocratInnerLoopMillis inner loop
 		this.autoAutocrat = function() { // fractionOfCurrentBankruptcyBonus
 			this.autocratSelfNaming();
+			this.unlockCartel();
 			switch(this.currProcess) {
 				case 0: // Not running; new Autocrat state. Clear any existing loop and start pre-email loop.
 					this.currProcess = 1;
