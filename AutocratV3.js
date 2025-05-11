@@ -1,7 +1,7 @@
 "use strict";
 // The Idle Class Autocrat
 // made with luv by argembarger
-// v3.3.6, last tested with The Idle Class v0.8.2
+// v3.4.6, last tested with The Idle Class v0.8.2
 // USE AT OWN RISK -- feel free to steal
 // not responsible if your game gets hurt >_>
 // Export Early / Export Often
@@ -282,6 +282,13 @@ class IdleClassAutocrat {
 				}
 			}
 		};
+		this.autoBankruptcy = function() {
+			// i suggest always check out from the first game as soon as possible | as this unlocks goals ( wich further increases the multiplier )
+			if( game.bankruptcies.val() === 0 || game.nextBankruptcyBonus.val() > game.stats[this.currentBankruptcyStatsIndex].val() * this.bankruptcyResetFraction ) {
+				this.currProcess = 0;
+				game.restartGame();
+			}
+		};
 		this.autoMicromanage = function() {
 			for (let i = game.activeAcquisitions().length - 1; i >= 0; i--) {
 				this.currAcq = game.activeAcquisitions()[i];
@@ -350,15 +357,6 @@ class IdleClassAutocrat {
 			this.autoDivest();
 			
 		};
-		this.autoUntilAcquisitions = function() {
-			this.autoEarnDollars();
-			this.autoUpgrade();
-			this.autoHR();
-			this.autoMail();
-			this.autoInvest();
-			this.autoDivest();
-			this.autoScience();
-		};
 		this.autoUntilBankruptcy = function() {
 			this.autoEarnDollars();
 			this.autoUpgrade();
@@ -367,6 +365,26 @@ class IdleClassAutocrat {
 			this.autoInvest();
 			this.autoDivest();
 			this.autoScience();
+		};
+		this.autoUntilAcquisitions = function() {
+			this.autoEarnDollars();
+			this.autoUpgrade();
+			this.autoHR();
+			this.autoMail();
+			this.autoInvest();
+			this.autoDivest();
+			this.autoScience();
+			this.autoBankruptcy();
+		};
+		this.autoUntilInfinity = function() {
+			this.autoEarnDollars();
+			this.autoUpgrade();
+			this.autoHR();
+			this.autoMail();
+			this.autoInvest();
+			this.autoDivest();
+			this.autoScience();
+			this.autoBankruptcy();
 			this.autoMicromanage();
 		};
 		// Function to manage state of autocratInnerLoopMillis inner loop
@@ -390,25 +408,26 @@ class IdleClassAutocrat {
 					clearInterval(this.currProcessHandle);
 					this.currProcessHandle = setInterval(this.autoUntilResearchAndDevelopment.bind(this), this.autocratInnerLoopMillis);
 					break;
-				case 3: // Wait for R&D before changing loop to pre-Acquisitions loop.
+				case 3: // Wait for R&D before changing loop to pre-Bankruptcy loop.
 					if(game.locked().research === true) { break; }
 					this.currProcess = 4;
 					clearInterval(this.currProcessHandle);
-					this.currProcessHandle = setInterval(this.autoUntilAcquisitions.bind(this), this.autocratInnerLoopMillis);
-					break;
-				case 4: // Wait for Acquisitions before changing loop to pre-Bankruptcy loop
-					if(game.locked().acquisitions === true) { break; }
-					this.currProcess = 5;
-					clearInterval(this.currProcessHandle);
 					this.currProcessHandle = setInterval(this.autoUntilBankruptcy.bind(this), this.autocratInnerLoopMillis);
 					break;
-				case 5: // Wait until bankruptcy, then wait for conditions, before declaring bankruptcy and restarting loop.
-					if(game.locked().mail === true) { this.currProcess = 0; break; }
+				case 4: // Wait for Bankruptcy before changing loop to pre-Acquisitions loop
 					if(game.locked().bankruptcy === true) { break; }
-					if(game.nextBankruptcyBonus.val() > game.stats[this.currentBankruptcyStatsIndex].val() * this.bankruptcyResetFraction) {
-						this.currProcess = 0;
-						game.restartGame();
-					}
+					this.currProcess = 5;
+					clearInterval(this.currProcessHandle);
+					this.currProcessHandle = setInterval(this.autoUntilAcquisitions.bind(this), this.autocratInnerLoopMillis);
+					break;
+				case 5: // Wait for Acquisitions before changing loop to pre-Infinity loop
+					if(game.locked().acquisitions === true) { break; }
+					this.currProcess = 6;
+					clearInterval(this.currProcessHandle);
+					this.currProcessHandle = setInterval(this.autoUntilInfinity.bind(this), this.autocratInnerLoopMillis);
+					break;
+					break;
+				case 6: // just fckn run forevor | until the somewhat parallel condition-check sayz something else -- or we define some nu shit to handle ( like elections )
 					break;
 				default:
 					this.currProcess = 0;
