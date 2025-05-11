@@ -1,7 +1,7 @@
 "use strict";
 // The Idle Class Autocrat
 // made with luv by argembarger
-// v3.3.2, last tested with The Idle Class v0.8.2
+// v3.3.6, last tested with The Idle Class v0.8.2
 // USE AT OWN RISK -- feel free to steal
 // not responsible if your game gets hurt >_>
 // Export Early / Export Often
@@ -30,7 +30,7 @@ class IdleClassAutocrat {
 		this.autocratManageLoopMillis = 2500; // Default 2500, runs an Autocrat update every 2.5 seconds
 		this.autocratInnerLoopMillis = 100; // Default 100, does individual Autocrat actions every 0.1 seconds
 		this.upgradeSpendFraction = 1.0; // Default 1.0, willing to spend 100% on upgrades, RATIO VALUE, 0.67 = 67%
-		this.maxAllowableRisk = 0.0; // Default 0.0%, stops R&D hiring above this risk value, PERCENTAGE VALUE, 67.0 = 67%
+		this.maxAllowableRisk = 10.0; // Default 10.0%, stops R&D hiring above this risk value, PERCENTAGE VALUE, 67.0 = 67%
 		this.acquisitionStopHiringFraction = 0.666; // Default 0.666, stops hiring acq employees at less than 66.6% workers remaining, RATIO VALUE, 0.67 = 67%
 		this.bankruptcyResetFraction = 0.1; // Default 0.1, makes every bankruptcy 110%, RATIO VALUE, 0.67 = 67%
 		
@@ -91,6 +91,7 @@ class IdleClassAutocrat {
 		
 		this.autoEarnDollars = function() {
 			game.addManualClicks();
+			$(".top-click-value-display").text(game.earnedPerClick.displayVal()).fadeToggle()
 		};
 		this.autoUpgrade = function() {
 			if(this.upgradeSpendFraction >= 1.0) {
@@ -214,7 +215,7 @@ class IdleClassAutocrat {
 				this.invChecks = 0;
 				// Check existing investment target times, fill shortest-found slot
 				// Remember that target time is in milliseconds; 1 min = 60000 ms
-				// Desired target times by default are 1, 9, 59, 1:59, 2:59, etc...
+				// Desired target times by default are 1, 12, 70, 1:59, 2:59, etc...
 				// Desired percentages by default are based on number of slots
 				// 1 slot = 50%, 2 = 40%, 3 = 30%, 4 = 20%, 5+ = 10%
 				while(this.invBought === false) {
@@ -222,12 +223,12 @@ class IdleClassAutocrat {
 					this.invTargetMs = 60000;
 					this.invFoundTarget = false;
 					if(this.invChecks === 1) {
-						this.invTargetMins = 9;
-						this.invTargetMs = 9 * 60000;
+						this.invTargetMins = 12;
+						this.invTargetMs = 12 * 60000;
 					}
 					else if(this.invChecks === 2) {
-						this.invTargetMins = 59;
-						this.invTargetMs = 59 * 60000;
+						this.invTargetMins = 70;
+						this.invTargetMs = 70 * 60000;
 					}
 					else if(this.invChecks > 2) {
 						this.invTargetMins = 59 + (60 * (this.invChecks - 2));
