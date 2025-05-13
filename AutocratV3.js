@@ -401,6 +401,7 @@ class IdleClassAutocrat {
 					if(game.locked().bankruptcy === true) { break; }
 					if(game.nextBankruptcyBonus.val() > game.stats[this.currentBankruptcyStatsIndex].val() * this.bankruptcyResetFraction) {
 						this.currProcess = 0;
+						clearInterval(this.currProcessHandle);
 						game.restartGame();
 					}
 					break;
