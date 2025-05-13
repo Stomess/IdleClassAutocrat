@@ -403,6 +403,7 @@ class IdleClassAutocrat {
 						this.currProcess = 0;
 						clearInterval(this.currProcessHandle);
 						game.restartGame();
+						this.autoAutoAutocrat(); // super-safely clear the outer-loop too, for fresh businessesss (:
 					}
 					break;
 				default:
