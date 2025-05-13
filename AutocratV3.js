@@ -413,7 +413,7 @@ class IdleClassAutocrat {
 		
 		// Function to lazily kick off autocratManageLoopMillis outer loop
 		this.autoAutoAutocrat = function() {
-			if(this.currOuterProcessHandle !== 0) { clearInterval(this.currOuterProcessHandle); }
+			clearInterval(this.currOuterProcessHandle);
 			this.currOuterProcessHandle = setInterval(this.autoAutocrat.bind(this), this.autocratManageLoopMillis);
 		};
 	}
