@@ -169,12 +169,10 @@ class IdleClassAutocrat {
 			activeIdleClassAutocrat.outgoingMailDelay = 0;
 		};
 		this.autoScience = function() {
-			// Disables research to sell patents
 			// Assigns employees only when research disabled (no cheating!)
 			// You can manually disable research in-game to update employee numbers
 			if(game.research().patents().length > 0) {
-				if(game.research().active() === true)  { game.research().toggleProduction(); }
-				else { game.research().sellPatents(); }
+				game.research().sellPatents()
 			} else if(game.research().active() === false) {
 				if(game.research().risk.baseVal() <= this.maxAllowableRisk) {
 					let hiredSomeone = false;
