@@ -170,7 +170,6 @@ class IdleClassAutocrat {
 		};
 		this.autoScience = function() {
 			// Assigns employees only when research disabled (no cheating!)
-			// You can manually disable research in-game to update employee numbers
 			if(game.research().patents().length > 0) {
 				game.research().sellPatents()
 			} else if(game.research().active() === false) {
