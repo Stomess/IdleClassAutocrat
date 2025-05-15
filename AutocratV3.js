@@ -400,10 +400,13 @@ class IdleClassAutocrat {
 					if(game.locked().mail === true) { this.currProcess = 0; break; }
 					if(game.locked().bankruptcy === true) { break; }
 					if(game.nextBankruptcyBonus.val() > game.stats[this.currentBankruptcyStatsIndex].val() * this.bankruptcyResetFraction) {
-						this.currProcess = 0;
+						// 1st stop everything -- just in case
+						clearInterval(this.currOuterProcessHandle);
 						clearInterval(this.currProcessHandle);
+						// then start over (:
 						game.restartGame();
-						this.autoAutoAutocrat(); // super-safely clear the outer-loop too, for fresh businessesss (:
+						this.currProcess = 0;
+						this.autoAutoAutocrat();
 					}
 					break;
 				default:
