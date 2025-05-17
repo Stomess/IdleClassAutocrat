@@ -289,8 +289,13 @@ class IdleClassAutocrat {
 		this.autoBankruptcy = function() {
 			// i suggest always check out from the first game as soon as possible | as this unlocks goals ( wich further increases the multiplier )
 			if( game.bankruptcies.val() === 0 || game.nextBankruptcyBonus.val() > game.stats[this.currentBankruptcyStatsIndex].val() * this.bankruptcyResetFraction ) {
-				this.currProcess = 0;
+				// 1st stop everything -- just in case
+				clearInterval(this.currOuterProcessHandle);
+				clearInterval(this.currProcessHandle);
+				// then start over (:
 				game.restartGame();
+				this.currProcess = 0;
+				this.autoAutoAutocrat();
 			}
 		};
 		this.autoMicromanage = function() {
@@ -398,7 +403,7 @@ class IdleClassAutocrat {
 			switch(this.currProcess) {
 				case 0: // Not running; new Autocrat state. Clear any existing loop and start pre-email loop.
 					this.currProcess = 1;
-					if(this.currProcessHandle !== 0) { clearInterval(this.currProcessHandle); }
+					clearInterval(this.currProcessHandle);
 					this.currProcessHandle = setInterval(this.autoUntilEmails.bind(this), this.autocratInnerLoopMillis);
 					break;
 				case 1: // Wait for emails before changing loop to pre-Investments loop.
@@ -431,7 +436,6 @@ class IdleClassAutocrat {
 					clearInterval(this.currProcessHandle);
 					this.currProcessHandle = setInterval(this.autoUntilInfinity.bind(this), this.autocratInnerLoopMillis);
 					break;
-					break;
 				case 6: // just fckn run forevor | until the somewhat parallel condition-check sayz something else -- or we define some nu shit to handle ( like elections )
 					break;
 				default:
@@ -441,7 +445,7 @@ class IdleClassAutocrat {
 		
 		// Function to lazily kick off autocratManageLoopMillis outer loop
 		this.autoAutoAutocrat = function() {
-			if(this.currOuterProcessHandle !== 0) { clearInterval(this.currOuterProcessHandle); }
+			clearInterval(this.currOuterProcessHandle);
 			this.currOuterProcessHandle = setInterval(this.autoAutocrat.bind(this), this.autocratManageLoopMillis);
 		};
 	}
