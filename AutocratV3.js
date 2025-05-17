@@ -142,7 +142,7 @@ class IdleClassAutocrat {
 					// Human Resources
 					this.currOutgoing.selectedDepartment('4');
 				} else {
-					// Random other. 0 = investments, 1 = r&d, 2 = acquisitions. R&D is available before investments.
+					// Random other. 0 = investments, 1 = r&d, 2 = acquisitions
 					let r = Math.random();
 					// No acquisitions; constrain to [0...0.666], or 1 or 0
 					if(game.activeInvestments().length === 0) { r = r * 0.666; }
