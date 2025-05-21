@@ -153,7 +153,7 @@ class IdleClassAutocrat {
 					// Random other. 0 = investments, 1 = r&d, 2 = acquisitions
 					let r = Math.random();
 					// No acquisitions; constrain to [0...0.666], or 1 or 0
-					if(game.activeInvestments().length === 0) { r = r * 0.666; }
+					if(game.activeAcquisitions().length === 0) { r = r * 0.666; }
 					// No investments; additionally constrain to [0...0.333], or just 1
 					if(game.activeInvestments().length === 0) { r = r * 0.5; }
 					this.currOutgoing.selectedDepartment((r <= 0.333) ? '1' : ((r <= 0.666) ? '0' : '2'));
